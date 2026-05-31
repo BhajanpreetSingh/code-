@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wayfound - AI Travel Companion</title>
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="Wayfound overview">
+          <span class="brand-mark"><i data-lucide="compass"></i></span>
+          <span>
+            <strong>Wayfound</strong>
+            <small>Travel Companion</small>
+          </span>
+        </a>
+
+        <nav class="nav-list" aria-label="Primary navigation">
+          <a class="active" href="#overview"><i data-lucide="sparkles"></i><span>Overview</span></a>
+          <a href="#itinerary"><i data-lucide="map-pinned"></i><span>Itinerary</span></a>
+          <a href="#experiences"><i data-lucide="image"></i><span>Experiences</span></a>
+          <a href="#budget"><i data-lucide="wallet"></i><span>Budget</span></a>
+          <a href="#documents"><i data-lucide="folder-lock"></i><span>Documents</span></a>
+          <a href="#companion"><i data-lucide="message-circle-heart"></i><span>AI Companion</span></a>
+        </nav>
+
+        <button class="collapse-btn" type="button" aria-label="Collapse sidebar">
+          <i data-lucide="panel-left-close"></i>
+        </button>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <button class="icon-btn mobile-menu" type="button" aria-label="Open navigation"><i data-lucide="menu"></i></button>
+          <label class="search">
+            <i data-lucide="search"></i>
+            <input type="search" placeholder="Search places, notes, bookings" />
+          </label>
+          <button class="icon-btn" type="button" aria-label="Notifications"><i data-lucide="bell"></i></button>
+          <button class="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme"><i data-lucide="moon"></i></button>
+          <button class="profile" type="button" aria-label="Open profile">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&q=80" alt="" />
+          </button>
+        </header>
+
+        <section class="page overview-page active" id="overview" data-page="Overview">
+          <article class="trip-hero">
+            <div class="hero-image"></div>
+            <div class="hero-content">
+              <p class="eyebrow">Upcoming Adventure</p>
+              <h1>Tokyo, Japan</h1>
+              <div class="trip-meta">
+                <span>12 Oct - 22 Oct</span>
+                <span>10 Days</span>
+                <span>4 Travelers</span>
+              </div>
+              <button class="primary-btn"><i data-lucide="wand-sparkles"></i> Refine with AI</button>
+            </div>
+            <div class="readiness-card glass">
+              <div class="ring" style="--value: 82"><span>82%</span></div>
+              <div>
+                <strong>Trip Readiness</strong>
+                <p>Your essentials are almost complete.</p>
+              </div>
+            </div>
+          </article>
+
+          <div class="overview-grid">
+            <article class="panel focus-card">
+              <p class="eyebrow">Today's Focus</p>
+              <h2>Finish the essentials</h2>
+              <ul class="clean-list">
+                <li class="done"><i data-lucide="check"></i> Flights booked</li>
+                <li class="done"><i data-lucide="check"></i> Hotel confirmed</li>
+                <li><i data-lucide="clock"></i> Visa pending</li>
+                <li><i data-lucide="clock"></i> Insurance pending</li>
+              </ul>
+            </article>
+
+            <article class="panel insight-card">
+              <p class="eyebrow">AI Travel Insight</p>
+              <h2>A hidden autumn festival is happening during your visit.</h2>
+              <p>Wayfound found a small lantern market in Yanaka on your second evening, close to your food walk.</p>
+              <button class="secondary-btn">Add to itinerary</button>
+            </article>
+
+            <article class="panel milestone-card">
+              <p class="eyebrow">Next Milestone</p>
+              <h2>Apply for Visa</h2>
+              <span class="time-pill"><i data-lucide="timer"></i> 15 minutes</span>
+              <button class="primary-btn">Start now</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="page story-page" id="itinerary" data-page="Itinerary">
+          <div class="page-heading">
+            <p class="eyebrow">Itinerary</p>
+            <h2>Each day, shaped like a story.</h2>
+          </div>
+          <div class="story-timeline">
+            <article class="day-story">
+              <img src="https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=80" alt="" />
+              <div>
+                <span>Day 1</span>
+                <h3>Arrival in Shibuya</h3>
+                <p>Check in, slow ramen dinner, and a quiet first walk beneath the city lights.</p>
+              </div>
+            </article>
+            <article class="day-story">
+              <img src="https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=80" alt="" />
+              <div>
+                <span>Day 2</span>
+                <h3>Aoyama design wander</h3>
+                <p>Garden museum, Omotesando architecture, and sunset from Shibuya Sky.</p>
+              </div>
+            </article>
+            <article class="day-story">
+              <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=80" alt="" />
+              <div>
+                <span>Day 3</span>
+                <h3>Yanaka old Tokyo</h3>
+                <p>Ceramics, tiny cafes, shrine lanes, and the lantern market AI discovered.</p>
+              </div>
+            </article>
+          </div>
+          <button class="floating-action"><i data-lucide="shuffle"></i> Optimize the week</button>
+        </section>
+
+        <section class="page" id="experiences" data-page="Experiences">
+          <div class="page-heading">
+            <p class="eyebrow">Experiences</p>
+            <h2>Inspiration that feels personal.</h2>
+          </div>
+          <div class="masonry">
+            <article class="experience tall" style="--img: url('https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=1000&q=85')">
+              <span>Food Experience</span>
+              <h3>Vegetarian izakaya tasting</h3>
+            </article>
+            <article class="experience" style="--img: url('https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1000&q=85')">
+              <span>Photography</span>
+              <h3>Blue hour at Meguro River</h3>
+            </article>
+            <article class="experience" style="--img: url('https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=85')">
+              <span>Cultural</span>
+              <h3>Private tea ritual</h3>
+            </article>
+            <article class="experience wide-card" style="--img: url('https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1200&q=85')">
+              <span>Hidden Gem</span>
+              <h3>Quiet book cafes in Kichijoji</h3>
+            </article>
+          </div>
+        </section>
+
+        <section class="page calm-page" id="budget" data-page="Budget">
+          <div class="page-heading centered">
+            <p class="eyebrow">Budget</p>
+            <h2>Simple money clarity, no spreadsheet energy.</h2>
+          </div>
+          <article class="budget-card panel">
+            <div class="budget-main">
+              <span>Total Budget</span>
+              <strong>$8,000</strong>
+              <p>$6,420 spent. $1,580 remaining.</p>
+              <div class="budget-progress"><span style="width: 80%"></span></div>
+            </div>
+            <div class="category-list">
+              <div><span>Flights</span><strong>$2,400</strong></div>
+              <div><span>Hotels</span><strong>$2,060</strong></div>
+              <div><span>Food</span><strong>$720</strong></div>
+              <div><span>Activities</span><strong>$1,000</strong></div>
+              <div><span>Transport</span><strong>$310</strong></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="page" id="documents" data-page="Documents">
+          <div class="page-heading">
+            <p class="eyebrow">Documents</p>
+            <h2>Your travel wallet, quietly organized.</h2>
+          </div>
+          <div class="document-grid">
+            <article><i data-lucide="badge-check"></i><span>Passport</span><strong>Ready</strong></article>
+            <article><i data-lucide="stamp"></i><span>Visa</span><strong>Pending</strong></article>
+            <article><i data-lucide="shield-plus"></i><span>Insurance</span><strong>Missing</strong></article>
+            <article><i data-lucide="plane"></i><span>Flight Tickets</span><strong>Uploaded</strong></article>
+            <article><i data-lucide="hotel"></i><span>Hotel Bookings</span><strong>Uploaded</strong></article>
+            <button class="upload-card"><i data-lucide="upload"></i><span>Upload document</span></button>
+          </div>
+        </section>
+
+        <section class="page companion-page" id="companion" data-page="AI Companion">
+          <div class="companion-shell">
+            <div class="companion-intro">
+              <p class="eyebrow">AI Companion</p>
+              <h2>Your personal travel expert.</h2>
+              <p>Ask for a perfect day, hidden food, rainy-day replans, local etiquette, or a calmer route.</p>
+            </div>
+            <div class="chat-window">
+              <div class="chat-line ai">I noticed rain on Wednesday, so I moved your outdoor garden walk to Friday and found a gallery route nearby.</div>
+              <div class="prompt-grid">
+                <button>Plan my perfect day</button>
+                <button>Find hidden food spots</button>
+                <button>Replan because of rain</button>
+                <button>Suggest local experiences</button>
+              </div>
+              <label class="chat-input">
+                <input placeholder="Ask Wayfound anything about your trip" />
+                <button><i data-lucide="send"></i></button>
+              </label>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
