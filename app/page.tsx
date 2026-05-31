@@ -28,7 +28,7 @@ import {
   Wallet,
   WandSparkles
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 
 const navItems = [
   { id: "journey", label: "Journey", icon: Plane },
@@ -124,6 +124,13 @@ export default function Home() {
   const [isDark, setIsDark] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [festivalAdded, setFestivalAdded] = useState(false);
+  const [notice, setNotice] = useState("Tokyo planning workspace is ready.");
+  const [chatText, setChatText] = useState("");
+  const [chatReply, setChatReply] = useState("I moved your garden walk away from Wednesday's rain and found a gallery route with a late tea room nearby.");
+  const [uploadedDocuments, setUploadedDocuments] = useState<string[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     document.body.classList.toggle("dark", isDark);
@@ -132,11 +139,65 @@ export default function Home() {
   }, [isDark, isCollapsed, isNavOpen]);
 
   const pageTitle = useMemo(() => navItems.find((item) => item.id === activePage)?.label ?? "Journey", [activePage]);
+  const searchItems = useMemo(
+    () => [
+      ...navItems.map((item) => ({ title: item.label, detail: "Open section", page: item.id })),
+      ...dayStories.map((story) => ({ title: story.title, detail: `${story.day} itinerary`, page: "itinerary" })),
+      ...discoveries.map((discovery) => ({ title: discovery.title, detail: discovery.label, page: "discover" })),
+      ...documents.map((document) => ({ title: document.label, detail: document.status, page: "wallet" })),
+      { title: "Lantern Festival", detail: "AI insight near your hotel", page: "journey" },
+      { title: "Budget remaining", detail: "$1,580 available", page: "budget" }
+    ],
+    []
+  );
+  const searchResults = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) {
+      return [];
+    }
+
+    return searchItems
+      .filter((item) => `${item.title} ${item.detail}`.toLowerCase().includes(query))
+      .slice(0, 5);
+  }, [searchItems, searchQuery]);
 
   function openPage(pageId: string) {
     setActivePage(pageId);
     setIsNavOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function addFestivalToItinerary() {
+    setFestivalAdded(true);
+    setNotice("Autumn Lantern Festival added to Day 3 evening.");
+    openPage("itinerary");
+  }
+
+  function choosePrompt(prompt: string) {
+    setChatText(prompt);
+    setChatReply(`Absolutely. I will shape this around your Tokyo dates: ${prompt}`);
+  }
+
+  function sendMessage() {
+    const message = chatText.trim();
+    if (!message) {
+      setChatReply("Ask me for a day plan, hidden local food, rainy-day changes, or something unforgettable nearby.");
+      return;
+    }
+
+    setChatReply(`Here is a polished first suggestion for "${message}": keep the morning slow, reserve one signature experience, and leave the evening open for the best local discovery.`);
+    setChatText("");
+  }
+
+  function handleUpload(event: ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(event.target.files ?? []).map((file) => file.name);
+    if (files.length === 0) {
+      return;
+    }
+
+    setUploadedDocuments((current) => [...current, ...files]);
+    setNotice(`${files.length} travel document${files.length > 1 ? "s" : ""} added to your wallet.`);
+    event.target.value = "";
   }
 
   return (
@@ -182,15 +243,43 @@ export default function Home() {
           </button>
           <label className="search">
             <Search />
-            <input type="search" placeholder="Search Tokyo, notes, reservations" />
+            <input
+              type="search"
+              placeholder="Search Tokyo, notes, reservations"
+              value={searchQuery}
+              onChange={(event) => setSearchQuery(event.target.value)}
+            />
+            {searchQuery.trim() && (
+              <div className="search-results">
+                {searchResults.length > 0 ? (
+                  searchResults.map((result) => (
+                    <button
+                      key={`${result.page}-${result.title}`}
+                      type="button"
+                      onClick={() => {
+                        openPage(result.page);
+                        setSearchQuery("");
+                        setNotice(`Opened ${result.title}.`);
+                      }}
+                    >
+                      <strong>{result.title}</strong>
+                      <span>{result.detail}</span>
+                    </button>
+                  ))
+                ) : (
+                  <p>No matches found. Try "visa", "budget", "food", or "lantern".</p>
+                )}
+              </div>
+            )}
           </label>
           <button className="icon-btn" type="button" aria-label="Toggle theme" onClick={() => setIsDark((value) => !value)}>
             {isDark ? <Sun /> : <Moon />}
           </button>
-          <button className="profile" type="button" aria-label="Open profile">
+          <button className="profile" type="button" aria-label="Open profile" onClick={() => setNotice("Traveler profile: 4 guests, vegetarian-friendly, slow mornings preferred.")}>
             <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=96&q=80" alt="" />
           </button>
         </header>
+        <div className="notice-bar" role="status">{notice}</div>
 
         <section className={`page journey-page ${activePage === "journey" ? "active" : ""}`} id="journey" hidden={activePage !== "journey"}>
           <article className="trip-hero">
@@ -203,12 +292,12 @@ export default function Home() {
                 <span>10 Days</span>
                 <span>4 Travelers</span>
               </div>
-              <button className="primary-btn"><WandSparkles /> Continue Planning</button>
+              <button className="primary-btn" onClick={() => openPage("itinerary")}><WandSparkles /> Continue Planning</button>
             </div>
             <div className="hero-note">
               <span>AI Insight</span>
               <strong>Tokyo&apos;s Autumn Lantern Festival is happening 2 km from your hotel.</strong>
-              <button type="button">Add the evening <ChevronRight /></button>
+              <button type="button" onClick={addFestivalToItinerary}>Add the evening <ChevronRight /></button>
             </div>
           </article>
 
@@ -247,6 +336,7 @@ export default function Home() {
                   </div>
                   <ul>
                     {story.moments.map((moment) => <li key={moment}>{moment}</li>)}
+                    {festivalAdded && story.day === "Day 3" ? <li className="added-moment">Autumn Lantern Festival added by Wayfound</li> : null}
                   </ul>
                 </div>
               </article>
@@ -309,7 +399,15 @@ export default function Home() {
                 </article>
               );
             })}
-            <button className="upload-card"><Upload /><span>Upload document</span></button>
+            {uploadedDocuments.map((fileName) => (
+              <article className="uploaded-doc" key={fileName}>
+                <FolderLock />
+                <span>{fileName}</span>
+                <strong>Uploaded</strong>
+              </article>
+            ))}
+            <button className="upload-card" type="button" onClick={() => fileInputRef.current?.click()}><Upload /><span>Upload document</span></button>
+            <input ref={fileInputRef} className="file-input" type="file" multiple onChange={handleUpload} />
           </div>
         </section>
 
@@ -321,13 +419,23 @@ export default function Home() {
               <p>Ask Wayfound for a perfect day, hidden food, rainy-day replans, etiquette, routes, or a more memorable evening.</p>
             </div>
             <div className="chat-window">
-              <div className="chat-line ai">I moved your garden walk away from Wednesday&apos;s rain and found a gallery route with a late tea room nearby.</div>
+              <div className="chat-line ai">{chatReply}</div>
               <div className="prompt-grid">
-                {prompts.map((prompt) => <button key={prompt}>{prompt}</button>)}
+                {prompts.map((prompt) => <button key={prompt} onClick={() => choosePrompt(prompt)}>{prompt}</button>)}
               </div>
               <label className="chat-input">
-                <input placeholder="Ask Wayfound anything about your trip" />
-                <button type="button" aria-label="Send message"><Send /></button>
+                <input
+                  placeholder="Ask Wayfound anything about your trip"
+                  value={chatText}
+                  onChange={(event) => setChatText(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") {
+                      event.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                />
+                <button type="button" aria-label="Send message" onClick={sendMessage}><Send /></button>
               </label>
             </div>
           </div>

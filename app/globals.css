@@ -230,6 +230,7 @@ body.collapsed .nav-list a {
 }
 
 .search {
+  position: relative;
   flex: 1;
   gap: 10px;
   padding-left: 14px;
@@ -243,6 +244,61 @@ body.collapsed .nav-list a {
   border: 0;
   outline: 0;
   background: transparent;
+}
+
+.search-results {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(24px);
+}
+
+body.dark .search-results {
+  background: rgba(16, 27, 42, 0.94);
+}
+
+.search-results button {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 16px;
+  color: var(--text);
+  background: transparent;
+  text-align: left;
+}
+
+.search-results button:hover {
+  background: rgba(120, 142, 164, 0.1);
+}
+
+.search-results span,
+.search-results p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.notice-bar {
+  width: fit-content;
+  max-width: min(720px, 100%);
+  margin: 0 auto 18px;
+  padding: 10px 15px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: var(--surface);
+  box-shadow: 0 14px 42px rgba(24, 42, 66, 0.08);
+  backdrop-filter: blur(20px);
 }
 
 .icon-btn,
@@ -716,6 +772,11 @@ body.dark .step-card {
   background: var(--sunset);
 }
 
+.day-story li.added-moment {
+  color: var(--ocean);
+  font-weight: 850;
+}
+
 .floating-action {
   position: sticky;
   bottom: 24px;
@@ -866,6 +927,14 @@ body.dark .step-card {
   justify-content: center;
   border-style: dashed;
   font-weight: 850;
+}
+
+.uploaded-doc {
+  outline: 2px solid rgba(66, 168, 117, 0.18);
+}
+
+.file-input {
+  display: none;
 }
 
 .companion-page {
