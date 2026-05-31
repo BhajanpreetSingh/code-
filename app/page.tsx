@@ -2,13 +2,15 @@
 
 import {
   BadgeCheck,
-  Bell,
+  CalendarDays,
   Check,
-  Clock,
+  ChevronRight,
+  CloudSun,
   Compass,
   FolderLock,
   Hotel,
   ImageIcon,
+  Map,
   MapPinned,
   Menu,
   MessageCircleHeart,
@@ -19,11 +21,9 @@ import {
   Search,
   Send,
   ShieldPlus,
-  Shuffle,
   Sparkles,
   Stamp,
   Sun,
-  Timer,
   Upload,
   Wallet,
   WandSparkles
@@ -31,64 +31,73 @@ import {
 import { useEffect, useMemo, useState } from "react";
 
 const navItems = [
-  { id: "overview", label: "Overview", icon: Sparkles },
+  { id: "journey", label: "Journey", icon: Plane },
   { id: "itinerary", label: "Itinerary", icon: MapPinned },
-  { id: "experiences", label: "Experiences", icon: ImageIcon },
+  { id: "discover", label: "Discover", icon: Sparkles },
   { id: "budget", label: "Budget", icon: Wallet },
-  { id: "documents", label: "Documents", icon: FolderLock },
+  { id: "wallet", label: "Travel Wallet", icon: FolderLock },
   { id: "companion", label: "AI Companion", icon: MessageCircleHeart }
 ];
 
-const focusItems = [
-  { label: "Flights booked", done: true },
-  { label: "Hotel confirmed", done: true },
-  { label: "Visa pending", done: false },
-  { label: "Insurance pending", done: false }
+const journeySteps = [
+  { label: "Flights Ready", detail: "Seats selected for all travelers", done: true },
+  { label: "Hotel Reserved", detail: "Aoyama boutique stay confirmed", done: true },
+  { label: "Visa Pending", detail: "Application draft is prepared", done: false },
+  { label: "Insurance Needed", detail: "Choose coverage before departure", done: false }
 ];
 
 const dayStories = [
   {
     day: "Day 1",
-    title: "Arrival in Shibuya",
-    body: "Check in, slow ramen dinner, and a quiet first walk beneath the city lights.",
-    image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=900&q=80"
+    title: "Shibuya, softly at night",
+    weather: "18 C, clear",
+    map: "2.4 km gentle route",
+    image: "https://images.unsplash.com/photo-1513407030348-c983a97b98d8?auto=format&fit=crop&w=1200&q=86",
+    moments: ["Morning arrival and private transfer", "Afternoon check-in with skyline tea", "Evening ramen walk under city lights"]
   },
   {
     day: "Day 2",
-    title: "Aoyama design wander",
-    body: "Garden museum, Omotesando architecture, and sunset from Shibuya Sky.",
-    image: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=900&q=80"
+    title: "Design lanes of Aoyama",
+    weather: "20 C, crisp",
+    map: "4 stops curated",
+    image: "https://images.unsplash.com/photo-1542051841857-5f90071e7989?auto=format&fit=crop&w=1200&q=86",
+    moments: ["Morning garden museum", "Afternoon Omotesando architecture", "Evening sunset from Shibuya Sky"]
   },
   {
     day: "Day 3",
-    title: "Yanaka old Tokyo",
-    body: "Ceramics, tiny cafes, shrine lanes, and the lantern market AI discovered.",
-    image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=900&q=80"
+    title: "Old Tokyo in Yanaka",
+    weather: "17 C, golden",
+    map: "Lantern route nearby",
+    image: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=1200&q=86",
+    moments: ["Morning shrine lanes", "Afternoon ceramics and tiny cafes", "Evening autumn lantern market"]
   }
 ];
 
-const experiences = [
+const discoveries = [
   {
-    className: "tall",
-    label: "Food Experience",
+    label: "Hidden Gems",
+    title: "A candlelit listening bar in Ebisu",
+    image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?auto=format&fit=crop&w=1100&q=86"
+  },
+  {
+    label: "Local Food",
     title: "Vegetarian izakaya tasting",
-    image: "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=1000&q=85"
+    image: "https://images.unsplash.com/photo-1554797589-7241bb691973?auto=format&fit=crop&w=1100&q=86"
   },
   {
     label: "Photography",
-    title: "Blue hour at Meguro River",
-    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1000&q=85"
+    title: "Blue hour along Meguro River",
+    image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1100&q=86"
   },
   {
     label: "Cultural",
-    title: "Private tea ritual",
-    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1000&q=85"
+    title: "Private tea ritual in a quiet machiya",
+    image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1100&q=86"
   },
   {
-    className: "wide-card",
-    label: "Hidden Gem",
-    title: "Quiet book cafes in Kichijoji",
-    image: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1200&q=85"
+    label: "Nature",
+    title: "Autumn maples at Rikugien Garden",
+    image: "https://images.unsplash.com/photo-1524413840807-0c3cb6fa808d?auto=format&fit=crop&w=1200&q=86"
   }
 ];
 
@@ -96,22 +105,22 @@ const budgetCategories = [
   ["Flights", "$2,400"],
   ["Hotels", "$2,060"],
   ["Food", "$720"],
-  ["Activities", "$1,000"],
+  ["Experiences", "$1,000"],
   ["Transport", "$310"]
 ];
 
 const documents = [
   { label: "Passport", status: "Ready", icon: BadgeCheck },
   { label: "Visa", status: "Pending", icon: Stamp },
-  { label: "Insurance", status: "Missing", icon: ShieldPlus },
+  { label: "Insurance", status: "Needed", icon: ShieldPlus },
   { label: "Flight Tickets", status: "Uploaded", icon: Plane },
-  { label: "Hotel Bookings", status: "Uploaded", icon: Hotel }
+  { label: "Hotel Reservations", status: "Uploaded", icon: Hotel }
 ];
 
-const prompts = ["Plan my perfect day", "Find hidden food spots", "Replan because of rain", "Suggest local experiences"];
+const prompts = ["Plan my perfect day.", "Find hidden local restaurants.", "Adjust my plans because of rain.", "Suggest unique experiences nearby."];
 
 export default function Home() {
-  const [activePage, setActivePage] = useState("overview");
+  const [activePage, setActivePage] = useState("journey");
   const [isDark, setIsDark] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -122,7 +131,7 @@ export default function Home() {
     document.body.classList.toggle("nav-open", isNavOpen);
   }, [isDark, isCollapsed, isNavOpen]);
 
-  const pageTitle = useMemo(() => navItems.find((item) => item.id === activePage)?.label ?? "Overview", [activePage]);
+  const pageTitle = useMemo(() => navItems.find((item) => item.id === activePage)?.label ?? "Journey", [activePage]);
 
   function openPage(pageId: string) {
     setActivePage(pageId);
@@ -133,11 +142,11 @@ export default function Home() {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <a className="brand" href="#overview" aria-label="Wayfound overview" onClick={() => openPage("overview")}>
+        <a className="brand" href="#journey" aria-label="Wayfound journey" onClick={() => openPage("journey")}>
           <span className="brand-mark"><Compass /></span>
           <span>
             <strong>Wayfound</strong>
-            <small>Travel Companion</small>
+            <small>Luxury Travel AI</small>
           </span>
         </a>
 
@@ -173,10 +182,9 @@ export default function Home() {
           </button>
           <label className="search">
             <Search />
-            <input type="search" placeholder="Search places, notes, bookings" />
+            <input type="search" placeholder="Search Tokyo, notes, reservations" />
           </label>
-          <button className="icon-btn" type="button" aria-label="Notifications"><Bell /></button>
-          <button className="icon-btn" id="themeToggle" type="button" aria-label="Toggle theme" onClick={() => setIsDark((value) => !value)}>
+          <button className="icon-btn" type="button" aria-label="Toggle theme" onClick={() => setIsDark((value) => !value)}>
             {isDark ? <Sun /> : <Moon />}
           </button>
           <button className="profile" type="button" aria-label="Open profile">
@@ -184,91 +192,82 @@ export default function Home() {
           </button>
         </header>
 
-        <section className={`page overview-page ${activePage === "overview" ? "active" : ""}`} id="overview" hidden={activePage !== "overview"}>
+        <section className={`page journey-page ${activePage === "journey" ? "active" : ""}`} id="journey" hidden={activePage !== "journey"}>
           <article className="trip-hero">
             <div className="hero-image" />
             <div className="hero-content">
-              <p className="eyebrow">Upcoming Adventure</p>
-              <h1>Tokyo, Japan</h1>
+              <p className="eyebrow">Your next memory begins here</p>
+              <h1>Tokyo</h1>
               <div className="trip-meta">
-                <span>12 Oct - 22 Oct</span>
+                <span><CalendarDays /> Oct 12 - Oct 22</span>
                 <span>10 Days</span>
                 <span>4 Travelers</span>
               </div>
-              <button className="primary-btn"><WandSparkles /> Refine with AI</button>
+              <button className="primary-btn"><WandSparkles /> Continue Planning</button>
             </div>
-            <div className="readiness-card glass">
-              <div className="ring" style={{ "--value": 82 } as React.CSSProperties}><span>82%</span></div>
-              <div>
-                <strong>Trip Readiness</strong>
-                <p>Your essentials are almost complete.</p>
-              </div>
+            <div className="hero-note">
+              <span>AI Insight</span>
+              <strong>Tokyo&apos;s Autumn Lantern Festival is happening 2 km from your hotel.</strong>
+              <button type="button">Add the evening <ChevronRight /></button>
             </div>
           </article>
 
-          <div className="overview-grid">
-            <article className="panel focus-card">
-              <p className="eyebrow">Today&apos;s Focus</p>
-              <h2>Finish the essentials</h2>
-              <ul className="clean-list">
-                {focusItems.map((item) => (
-                  <li className={item.done ? "done" : undefined} key={item.label}>
-                    {item.done ? <Check /> : <Clock />} {item.label}
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="panel insight-card">
-              <p className="eyebrow">AI Travel Insight</p>
-              <h2>A hidden autumn festival is happening during your visit.</h2>
-              <p>Wayfound found a small lantern market in Yanaka on your second evening, close to your food walk.</p>
-              <button className="secondary-btn">Add to itinerary</button>
-            </article>
-
-            <article className="panel milestone-card">
-              <p className="eyebrow">Next Milestone</p>
-              <h2>Apply for Visa</h2>
-              <span className="time-pill"><Timer /> 15 minutes</span>
-              <button className="primary-btn">Start now</button>
-            </article>
-          </div>
+          <section className="journey-progress" aria-label="Today's Journey Progress">
+            <div className="section-kicker">
+              <p className="eyebrow">Today&apos;s Journey Progress</p>
+              <h2>The essentials are becoming effortless.</h2>
+            </div>
+            <div className="preparation-line">
+              {journeySteps.map((step) => (
+                <article className={step.done ? "step-card done" : "step-card"} key={step.label}>
+                  <span>{step.done ? <Check /> : <Sparkles />}</span>
+                  <strong>{step.label}</strong>
+                  <p>{step.detail}</p>
+                </article>
+              ))}
+            </div>
+          </section>
         </section>
 
         <section className={`page story-page ${activePage === "itinerary" ? "active" : ""}`} id="itinerary" hidden={activePage !== "itinerary"}>
           <div className="page-heading">
             <p className="eyebrow">Itinerary</p>
-            <h2>Each day, shaped like a story.</h2>
+            <h2>Every day reads like a travel story.</h2>
           </div>
-          <div className="story-timeline">
+          <div className="editorial-timeline">
             {dayStories.map((story) => (
               <article className="day-story" key={story.day}>
                 <img src={story.image} alt="" />
                 <div>
                   <span>{story.day}</span>
                   <h3>{story.title}</h3>
-                  <p>{story.body}</p>
+                  <div className="story-meta">
+                    <small><CloudSun /> {story.weather}</small>
+                    <small><Map /> {story.map}</small>
+                  </div>
+                  <ul>
+                    {story.moments.map((moment) => <li key={moment}>{moment}</li>)}
+                  </ul>
                 </div>
               </article>
             ))}
           </div>
-          <button className="floating-action"><Shuffle /> Optimize the week</button>
         </section>
 
-        <section className={`page ${activePage === "experiences" ? "active" : ""}`} id="experiences" hidden={activePage !== "experiences"}>
+        <section className={`page discover-page ${activePage === "discover" ? "active" : ""}`} id="discover" hidden={activePage !== "discover"}>
           <div className="page-heading">
-            <p className="eyebrow">Experiences</p>
-            <h2>Inspiration that feels personal.</h2>
+            <p className="eyebrow">Discover</p>
+            <h2>One beautiful reason to get lost.</h2>
           </div>
           <div className="masonry">
-            {experiences.map((experience) => (
+            {discoveries.map((discovery, index) => (
               <article
-                className={`experience ${experience.className ?? ""}`}
-                key={experience.title}
-                style={{ "--img": `url('${experience.image}')` } as React.CSSProperties}
+                className={`experience ${index === 0 ? "tall" : ""} ${index === 4 ? "wide-card" : ""}`}
+                key={discovery.title}
+                style={{ "--img": `url('${discovery.image}')` } as React.CSSProperties}
               >
-                <span>{experience.label}</span>
-                <h3>{experience.title}</h3>
+                <span>{discovery.label}</span>
+                <h3>{discovery.title}</h3>
               </article>
             ))}
           </div>
@@ -277,13 +276,13 @@ export default function Home() {
         <section className={`page calm-page ${activePage === "budget" ? "active" : ""}`} id="budget" hidden={activePage !== "budget"}>
           <div className="page-heading centered">
             <p className="eyebrow">Budget</p>
-            <h2>Simple money clarity, no spreadsheet energy.</h2>
+            <h2>Clarity without killing the romance.</h2>
           </div>
           <article className="budget-card panel">
             <div className="budget-main">
-              <span>Total Budget</span>
-              <strong>$8,000</strong>
-              <p>$6,420 spent. $1,580 remaining.</p>
+              <span>Budget Used</span>
+              <strong>$6,420</strong>
+              <p>$1,580 remains for spontaneous magic.</p>
               <div className="budget-progress"><span /></div>
             </div>
             <div className="category-list">
@@ -294,10 +293,10 @@ export default function Home() {
           </article>
         </section>
 
-        <section className={`page ${activePage === "documents" ? "active" : ""}`} id="documents" hidden={activePage !== "documents"}>
+        <section className={`page wallet-page ${activePage === "wallet" ? "active" : ""}`} id="wallet" hidden={activePage !== "wallet"}>
           <div className="page-heading">
-            <p className="eyebrow">Documents</p>
-            <h2>Your travel wallet, quietly organized.</h2>
+            <p className="eyebrow">Travel Wallet</p>
+            <h2>Your digital passport, beautifully ready.</h2>
           </div>
           <div className="document-grid">
             {documents.map((document) => {
@@ -318,11 +317,11 @@ export default function Home() {
           <div className="companion-shell">
             <div className="companion-intro">
               <p className="eyebrow">AI Companion</p>
-              <h2>Your personal travel expert.</h2>
-              <p>Ask for a perfect day, hidden food, rainy-day replans, local etiquette, or a calmer route.</p>
+              <h2>A personal travel expert, not a chatbot.</h2>
+              <p>Ask Wayfound for a perfect day, hidden food, rainy-day replans, etiquette, routes, or a more memorable evening.</p>
             </div>
             <div className="chat-window">
-              <div className="chat-line ai">I noticed rain on Wednesday, so I moved your outdoor garden walk to Friday and found a gallery route nearby.</div>
+              <div className="chat-line ai">I moved your garden walk away from Wednesday&apos;s rain and found a gallery route with a late tea room nearby.</div>
               <div className="prompt-grid">
                 {prompts.map((prompt) => <button key={prompt}>{prompt}</button>)}
               </div>
